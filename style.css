@@ -31,6 +31,8 @@ body {
   padding: 30px;
 }
 .book {
+  display: flex;
+  flex-direction: column;
   height: 370px;
   width: 275px;
   outline: black solid;
@@ -42,4 +44,13 @@ dialog {
   transform: translateX(-50%);
   top: 40%;
   left: 50%;
+}
+
+.removeBtn {
+  height: 20px;
+  width: 100px;
+}
+.toggleBtn {
+  height: 20px;
+  width: 100px;
 }

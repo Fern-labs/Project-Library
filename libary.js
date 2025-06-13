@@ -1,3 +1,7 @@
+const btn = document.querySelector(".btn");
+const dialog = document.querySelector("dialog");
+const form = document.querySelector("form");
+
 const myLibrary = [];
 
 function Book(title, author, pages, read) {
@@ -10,6 +14,9 @@ function Book(title, author, pages, read) {
     return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read}`;
   };
 }
+Book.prototype.toggleRead = function () {
+  this.read = this.read === "read" ? "not read" : "read";
+};
 
 function addBookToLibrary(title, author, pages, read) {
   const newBook = new Book(title, author, pages, read);
@@ -22,22 +29,47 @@ addBookToLibrary("Morning Star", "Pierce Brown", 576, "not read");
 console.log(myLibrary);
 
 function updateBookShelf() {
+  const bookShelf = document.querySelector(".bookshelf");
+  bookShelf.innerHTML = "";
+
   for (let book of myLibrary) {
-    const bookShelf = document.querySelector(".bookshelf");
     let addBook = document.createElement("div");
     addBook.classList.add("book");
-    //for later book.title works for css
-    //addBook.innerHTML = book.title;
+
     addBook.innerHTML = book.info();
+
+    const removeBtn = document.createElement("button");
+    removeBtn.classList.add("removeBtn");
+    removeBtn.textContent = "Remove";
+    removeBtn.setAttribute("data-id", book.id);
+    removeBtn.addEventListener("click", (e) => {
+      let id = e.target.getAttribute("data-id");
+      let bookTarget = myLibrary.findIndex((book) => book.id == id);
+      myLibrary.splice(bookTarget, 1);
+      updateBookShelf();
+    });
+
+    const toggleBtn = document.createElement("button");
+    toggleBtn.classList.add("toggleBtn");
+    toggleBtn.textContent = "Toggle Read";
+    toggleBtn.setAttribute("data-id", book.id);
+    toggleBtn.addEventListener("click", (e) => {
+      let id = e.target.getAttribute("data-id");
+      let bookTarget = myLibrary.find((book) => book.id == id);
+      if (bookTarget) {
+        bookTarget.toggleRead();
+        updateBookShelf();
+      }
+    });
+
+    addBook.appendChild(removeBtn);
+    addBook.appendChild(toggleBtn);
+
     bookShelf.appendChild(addBook);
   }
 }
 
 updateBookShelf();
-
-const btn = document.querySelector(".btn");
-const dialog = document.querySelector("dialog");
-const form = document.querySelector("form");
 
 btn.addEventListener("click", () => {
   dialog.showModal();
